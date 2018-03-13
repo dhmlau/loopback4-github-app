@@ -33,7 +33,40 @@ _Note_: the class name will be suffixed with `Controller`.
 In the newly created `GHRepoController`, we are going to create a GET endpoint `/repo/{org}/{repo}/stars` to return the number of stargazers in a given GitHub organization and repository.  
 
 In `controllers\gh-repo.controller.ts`
-```
-```
 
+### a. Create the endpoint
+First, just to make sure we can hit the endpoint correctly. 
+
+```ts
+@get('/repo/{org}/{repo}/stars') 
+getRepoStargazers(
+  @param.path.string('org') org: string,
+  @param.path.string('repo') repo: string
+): string {
+  console.log('org/repo', org, repo);
+  return '100';
+}
+```
+Run `npm start` to start the application.  
+Then go to a browser, type:
+```
+http://localhost:3000/swagger-ui
+```
+This will bring you to the API explorer where you can test your API.  
+You should see something like below:
+
+![Screen shot](img/screenshot-ghRepoController-apiExplorer.png)
+
+### b. Add logics in GHRepoController
+What we have done: 
+1. Use `octokat` node module as GitHub API client.
+  - run `npm i --save octokat`
+
+2. Make `getRepoStargazers` to be async
+
+See `controllers\gh-repo.controller.ts` for code.
+
+Restarting the app again by running `npm start`. 
+
+![Screen shot](img/screenshot-ghRepoController-apiExplorer2.png)
 
