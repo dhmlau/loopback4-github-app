@@ -37,7 +37,7 @@ export class GHStars extends Entity {
         format: 'date'
 
     })
-    countdate: DateType;
+    countdate: Date;
 };
 
 export const GHStarsSchema = getJsonSchema(GHStars);

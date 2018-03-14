@@ -3,23 +3,30 @@
 [![LoopBack](http://loopback.io/images/overview/powered-by-LB-xs.png)](http://loopback.io/)
 
 ## Goal for this project
-To show how to: 
-- create/expose REST APIs through controllers
-- how to call GitHub APIs in a controller using `octokat` node module
-- how to persist the data to a Cloudant database
+The goal of this project is to show how to use LoopBack 4 to: 
+- create REST APIs
+- how to call GitHub REST APIs using `octokat` node module
+- how to persist the data to a [Cloudant](https://console.bluemix.net/catalog/services/cloudant-nosql-db) database
+
+The LoopBack 4 application created in this repo is to get the number of stargazers for a given GitHub repo and store it in a database.  
 
 ## Steps 
 ### 1. Scaffolding an LB4 application
-Run this command:
-`lb4 app`
+We are using the command-line interface to scaffold an LB4 application.  For other commands, refer to the [command-line interfaces documentation](http://loopback.io/doc/en/lb4/Command-line-interface.html).
+Run the following command:
 
-The app comes with `/ping` REST endpoint.  You can test it out by running `npm start`.  Type `http://127.0.0.1:3000/ping` in your favorite web browser and  you can see something like: 
+```lb4 app```
+
+The app comes with `/ping` REST endpoint.  You can test it out by running `npm start`.  
+Type `http://127.0.0.1:3000/ping` in your favorite web browser and the output will look like this:
 ```
 {"greeting":"Hello from LoopBack",...}
 ```
 
 ### 2. Generating the controller for creating REST APIs. 
-To do this, run this command: `lb4 controller`.
+A [Controller](http://loopback.io/doc/en/lb4/Controllers.html) is where you implement the business logics.  Run the following command to create a controller:
+
+```lb4 controller```
 
 The output would be: 
 ```
@@ -32,10 +39,8 @@ _Note_: the class name will be suffixed with `Controller`.
 ### 3. Creating APIs in GHRepoController
 In the newly created `GHRepoController`, we are going to create a GET endpoint `/repo/{org}/{repo}/stars` to return the number of stargazers in a given GitHub organization and repository.  
 
-In `controllers\gh-repo.controller.ts`
-
-### a. Creating the endpoint
-First, just to make sure we can hit the endpoint correctly. 
+**a. Creating the endpoint**
+In `controllers\gh-repo.controller.ts`, add the following function: 
 
 ```ts
 @get('/repo/{org}/{repo}/stars') 
@@ -47,27 +52,28 @@ getRepoStargazers(
   return '100';
 }
 ```
-Run `npm start` to start the application.  
+Before adding more logics, let's test the API first.  
+Run the command `npm start` to start the application.  
 Then go to a browser, type:
 ```
 http://localhost:3000/swagger-ui
 ```
 This will bring you to the API explorer where you can test your API.  
-You should see something like below:
+Try out the newly added REST API Under `GHRepoController`.
 
 ![Screen shot](img/screenshot-ghRepoController-apiExplorer.png)
 
 ### b. Adding logics in GHRepoController
-Now, add the logics in the controller so that it is getting the number of stargazers 
-for a given GitHub org and repo. 
+Now, edit the controller to get the number of stargazers for a given GitHub org and repo. 
+See `controllers\gh-repo.controller.ts` for details.
 
 What we have done: 
 1. Use `octokat` node module as GitHub API client.
-  - run `npm i --save octokat`
+Install `octokat` module by running:
 
-2. Make `getRepoStargazers` to be async
+    ```npm i --save octokat```
 
-See `controllers\gh-repo.controller.ts` for code.
+2. Make `getRepoStargazers` to be async.
 
 Restarting the app again by running `npm start`. 
 
@@ -76,7 +82,10 @@ Restarting the app again by running `npm start`.
 ### 4. Persisting data in Cloudant database
 The next step is to persist the data in a database.  
 
-### a. Defining the model 
+**a. Defining the model**
+
+The model is created in `models\gh-stars.model.ts`.
+
 We're defining the model for the data to be persisted in the database.
 The model `GHStars` we are creating extends from a base class `Entity` and 
 has the following properties:
@@ -85,14 +94,12 @@ has the following properties:
 - stars: number of stars for the given org/repo
 - countdate: date of the entry being created
 
-See `gh-stars.model.ts` under `models` folder.
+**b. Defining the datasource**
 
-
-### b. Defining the datasource
 We're going to declare the datasource connection through `datasources.json`. 
 It is similar to what we do in LoopBack 3 for those who are familiar with the older version of LoopBack.  For details, see http://loopback.io/doc/en/lb3/Defining-data-sources.html.  
 
-To do this, create `datasources.json` under `config` folder.  It should look something like this:
+To do this, create `config\datasources.json`.  The sample below is using Cloudant:
 ```
 {
     "name": "db",
@@ -103,17 +110,18 @@ To do this, create `datasources.json` under `config` folder.  It should look som
 }
 ```
 
-The next step is to create DataSource `db.datasource.ts` under `datasources` folder,
+The next step is to create a DataSource class `datasources\db.datasource.ts`,
 which reads the `datasources.json` we just created.  
 See `datasources\db.datasource.ts` for details.
 
 
-### c. Creating Repository
+**c. Creating Repository**
+
 A [Repository](http://loopback.io/doc/en/lb4/Repositories.html) is a type of Service that represents a collection of data within a DataSource. 
 
 See code in `repositories\ghstar.repository.ts`.  
 
-### d. Creating Controller
+**d. Creating Controller**
 
 Run the command `lb4 controller` to create a controller.  
 
@@ -128,10 +136,32 @@ Run the command `lb4 controller` to create a controller.
 Controller GHStar is now created in src/controllers/
 ```
 
-### e. Adding RepositoryBooter to the application
+**e. Adding RepositoryBooter to the application**
+
 Go to `application.ts`. 
 Make the application extend from `BootMixin(RepositoryMixin(RestApplication))`.
 Bind the datasource.  
 
-You can test out the application.  Restart the app. 
+### 5. Putting things together
+So far, we have tried that we can get stargazer information from REST API in GHRepoController,
+and also can persist data through GHStarController.  
+Now, we are going to create a POST endpoint `/repo/{org}/{repo}/stars` that put the two
+actions together. 
 
+See `storeRepoStargazers` function in `controllers\gh-repo.controller.ts`.  
+
+### 5. Runnning end-to-end
+After restarting the application, go to the API explorer `localhost:3000/swagger-ui`.  Expand `GHRepoController`, and select `/repo/{org}/{repo}/stars`.  Type in the `org` and `repo` that you'd like to know about the number of stargazers.  
+
+After running it, you should see an entry in the Cloudant database look like:
+```
+{
+  "_id": "3b73f14ba69e384b2f71dbf15d399ae5",
+  "_rev": "1-1720cc83dd77d10197c9ce25ae1aa7d5",
+  "org": "strongloop",
+  "repo": "loopback-next",
+  "stars": 523,
+  "countdate": "Wed Mar 14 2018 13:38:30 GMT-0400 (EDT)",
+  "loopback__model__name": "GHStars"
+}
+```
