@@ -1,6 +1,6 @@
 # loopback4-github-app
 
-[![LoopBack](http://loopback.io/images/overview/powered-by-LB-xs.png)](http://loopback.io/)
+[![LoopBack](https://github.com/strongloop/loopback-next/blob/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-%402x.png)](http://loopback.io/)
 
 ## Goal for this project
 The goal of this project is to show how to use LoopBack 4 to: 
