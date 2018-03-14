@@ -5,11 +5,9 @@ import {MySequence} from './sequence';
 /* tslint:disable:no-unused-variable */
 // Binding and Booter imports are required to infer types for BootMixin!
 import {BootMixin, Booter, Binding} from '@loopback/boot';
-import {RepositoryMixin, Class, Repository, juggler} from '@loopback/repository';
-import {db} from './datasources/db.datasource';
 /* tslint:enable:no-unused-variable */
 
-export class GitHubApplication extends BootMixin(RepositoryMixin(RestApplication)) {
+export class GitHubApplication extends BootMixin(RestApplication) {
   constructor(options?: ApplicationConfig) {
     super(options);
 
@@ -26,8 +24,6 @@ export class GitHubApplication extends BootMixin(RepositoryMixin(RestApplication
         nested: true,
       },
     };
-
-    this.bindDataSource();
   }
 
   async start() {
@@ -37,10 +33,5 @@ export class GitHubApplication extends BootMixin(RepositoryMixin(RestApplication
     const port = await server.get('rest.port');
     console.log(`Server is running at http://127.0.0.1:${port}`);
     console.log(`Try http://127.0.0.1:${port}/ping`);
-  }
-
-  bindDataSource() {
-    // this.repository(GHStarRepository);
-    this.bind('datasources.db').to(db);
   }
 }
