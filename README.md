@@ -150,7 +150,7 @@ actions together.
 
 See `storeRepoStargazers` function in `controllers\gh-repo.controller.ts`.  
 
-### 5. Runnning end-to-end
+### 6. Runnning end-to-end
 After restarting the application, go to the API explorer `localhost:3000/swagger-ui`.  Expand `GHRepoController`, and select `/repo/{org}/{repo}/stars`.  Type in the `org` and `repo` that you'd like to know about the number of stargazers.  
 
 After running it, you should see an entry in the Cloudant database look like:
