@@ -45,6 +45,7 @@
     "@loopback/core": "^0.2.2",
     "@loopback/openapi-v3": "^0.3.1",
     "@loopback/rest": "^0.3.2",
+    "loopback-connector-cloudant": "^2.0.4",
     "octokat": "^0.9.2"
   },
   "devDependencies": {
