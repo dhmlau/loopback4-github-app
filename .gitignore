@@ -62,3 +62,6 @@ api-docs/
 
 # Transpiled JavaScript files from Typescript
 dist/
+
+# File contains credentials
+creds.ts

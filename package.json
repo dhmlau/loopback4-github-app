@@ -40,11 +40,12 @@
     "src"
   ],
   "dependencies": {
-    "@loopback/context": "^0.2.2",
     "@loopback/boot": "^0.3.2",
+    "@loopback/context": "^0.2.2",
     "@loopback/core": "^0.2.2",
+    "@loopback/openapi-v3": "^0.3.1",
     "@loopback/rest": "^0.3.2",
-    "@loopback/openapi-v3": "^0.3.1"
+    "octokat": "^0.9.2"
   },
   "devDependencies": {
     "@loopback/build": "^0.3.0",
