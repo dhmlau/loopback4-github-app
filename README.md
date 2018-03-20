@@ -136,7 +136,7 @@ Run the command `lb4 controller` to create a controller.
 Controller GHStar is now created in src/controllers/
 ```
 
-**e. Adding RepositoryBooter to the application**
+**e. Adding RepositoryMixin to the application**
 
 Go to `application.ts`. 
 Make the application extend from `BootMixin(RepositoryMixin(RestApplication))`.
