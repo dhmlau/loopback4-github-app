@@ -27,18 +27,15 @@ export class GHRepoController {
 async getRepoStargazers(
   @param.path.string('org') org: string,
   @param.path.string('repo') repo: string
-): Promise<string> {
+): Promise<number> {
   console.log('org/repo: ', org, repo);
-  let octoRepo = octo.repos(org, repo);
-  return await octoRepo.stargazers.fetch().then((content:GHStargazerList) => {
-    /*
-     * the github api paginates the stargazer results,
-     * so we're using a recursive function to get the total number count. 
-     */
-    return this.getStarCount(content.items.length, content.nextPageUrl);
-  });
+  return this._getStargazerCount(org, repo);
 }
 
+async _getStargazerCount(org: string, repo: string): Promise<number> {
+  const repoContent = await octo.repos(org, repo).fetch();
+  return repoContent.stargazersCount;
+}
 /**
    * Get the GitHub star count
    * and persist the value in a database
@@ -47,40 +44,14 @@ async getRepoStargazers(
   async storeRepoStargazers(
     @param.path.string('org') org: string,
     @param.path.string('repo') repo: string
-  ): Promise<void> {
+  ): Promise<GHStars> {
     console.log('org/repo', org, repo);
-    let octoRepo = octo.repos(org, repo);
-    return await octoRepo.stargazers.fetch().then((content:GHStargazerList) => {
-      /*
-       * the github api paginates the stargazer results,
-       * so we're using a recursive function to get the total number count. 
-       */
-      this.getStarCount(content.items.length, content.nextPageUrl).then((starNum:number)=> {
-        let ghStar = new GHStars();
-        ghStar.org = org;
-        ghStar.repo = repo;
-        ghStar.countdate = new DateType().defaultValue();
-        ghStar.stars = starNum;
-        this.ghstarRepository.create(ghStar);
-      });
-    });
+    const stargazerNum = await this._getStargazerCount(org, repo);
+    const ghStar = new GHStars();
+    ghStar.org = org;
+    ghStar.repo = repo;
+    ghStar.countdate = new DateType().defaultValue();
+    ghStar.stars = stargazerNum;
+    return await this.ghstarRepository.create(ghStar); 
   }
-
-
-/**
- * Recursive function to get the GitHub stars
- * @param count 
- * @param url 
- */
-async getStarCount(count:number, url: string): Promise<number> {
-  return await octo.fromUrl(url).fetch().then((content:GHStargazerList) => {
-    let newCount = count + content.items.length;
-
-    if (content.nextPageUrl != undefined) {
-      return this.getStarCount(newCount, content.nextPageUrl);
-    } else {
-      return newCount;
-    }
-  });
-}
 }
