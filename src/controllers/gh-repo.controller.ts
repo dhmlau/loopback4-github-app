@@ -1,6 +1,5 @@
 import {get, post, param} from "@loopback/openapi-v3";
 import {creds} from '../../creds';
-import {GHStargazerList} from '../types/types';
 import {GHStars} from "../models";
 import {DateType} from "@loopback/repository";
 import {GHStarRepository} from '../repositories';
@@ -28,14 +27,10 @@ async getRepoStargazers(
   @param.path.string('org') org: string,
   @param.path.string('repo') repo: string
 ): Promise<number> {
-  console.log('org/repo: ', org, repo);
-  return this._getStargazerCount(org, repo);
-}
-
-async _getStargazerCount(org: string, repo: string): Promise<number> {
   const repoContent = await octo.repos(org, repo).fetch();
   return repoContent.stargazersCount;
 }
+
 /**
    * Get the GitHub star count
    * and persist the value in a database
@@ -46,7 +41,8 @@ async _getStargazerCount(org: string, repo: string): Promise<number> {
     @param.path.string('repo') repo: string
   ): Promise<GHStars> {
     console.log('org/repo', org, repo);
-    const stargazerNum = await this._getStargazerCount(org, repo);
+    const repoContent = await octo.repos(org, repo).fetch();
+    const stargazerNum = repoContent.stargazersCount;
     const ghStar = new GHStars();
     ghStar.org = org;
     ghStar.repo = repo;
