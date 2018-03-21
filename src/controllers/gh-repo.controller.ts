@@ -18,27 +18,20 @@ export class GHRepoController {
   async getRepoStargazers(
     @param.path.string('org') org: string,
     @param.path.string('repo') repo: string
-  ): Promise<string> {
+  ): Promise<number> {
     console.log('org/repo: ', org, repo);
-    let octoRepo = octo.repos(org, repo);
-    return await octoRepo.stargazers.fetch().then((content:GHStargazerList) => {
-      /*
-       * the github api paginates the stargazer results,
-       * so we're using a recursive function to get the total number count. 
-       */
-      return this.getStarCount(content.items.length, content.nextPageUrl);
-    });
+    const octoRepo = octo.repos(org, repo);
+    const content = await octoRepo.stargazers.fetch();
+    return this._getStarCount(content.items.length, content.nextPageUrl);
   }
   
-  async getStarCount(count:number, url: string): Promise<number> {
-    return await octo.fromUrl(url).fetch().then((content:GHStargazerList) => {
-      let newCount = count + content.items.length;
-  
-      if (content.nextPageUrl != undefined) {
-        return this.getStarCount(newCount, content.nextPageUrl);
-      } else {
-        return newCount;
-      }
-    });
+  async _getStarCount(count:number, url: string): Promise<number> {
+    const content = await octo.fromUrl(url).fetch();
+    const newCount = count + content.items.length;
+    if (content.nextPageUrl != undefined) {
+      return await this._getStarCount(newCount, content.nextPageUrl);
+    } else {
+      return newCount;
+    }
   }
 }

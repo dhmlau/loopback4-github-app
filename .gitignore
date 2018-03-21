@@ -65,3 +65,4 @@ dist/
 
 # File contains credentials
 creds.ts
+config/
