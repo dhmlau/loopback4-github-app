@@ -20,18 +20,7 @@ export class GHRepoController {
     @param.path.string('repo') repo: string
   ): Promise<number> {
     console.log('org/repo: ', org, repo);
-    const octoRepo = octo.repos(org, repo);
-    const content = await octoRepo.stargazers.fetch();
-    return this._getStarCount(content.items.length, content.nextPageUrl);
-  }
-  
-  async _getStarCount(count:number, url: string): Promise<number> {
-    const content = await octo.fromUrl(url).fetch();
-    const newCount = count + content.items.length;
-    if (content.nextPageUrl != undefined) {
-      return await this._getStarCount(newCount, content.nextPageUrl);
-    } else {
-      return newCount;
-    }
+    const repoContent = await octo.repos(org, repo).fetch();
+    return repoContent.stargazersCount;
   }
 }
