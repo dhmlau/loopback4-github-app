@@ -2,7 +2,6 @@
 import {get, param} from "@loopback/openapi-v3";
 // import {inject} from @loopback/context;
 import {creds} from '../../creds';
-import {GHStargazerList} from '../types/types';
 
 const Octokat = require('octokat');
 
