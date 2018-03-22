@@ -11,7 +11,6 @@ export class GHStars extends Entity {
      * making the id as generated
      */
     @property({
-        type: 'number',
         id: true,
     })
     id?: number;
@@ -35,7 +34,6 @@ export class GHStars extends Entity {
         required: false,
         type: 'string',
         format: 'date'
-
     })
     countdate: Date;
 };
