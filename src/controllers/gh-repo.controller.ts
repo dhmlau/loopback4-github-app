@@ -1,8 +1,8 @@
 import {get, post, param} from "@loopback/openapi-v3";
 import {creds} from '../../creds';
-import {GHStars} from "../models";
+import {GHStars} from "../models/gh-stars.model";
 import {DateType} from "@loopback/repository";
-import {GHStarRepository} from '../repositories';
+import {GHStarRepository} from '../repositories/ghstar.repository';
 import {inject} from '@loopback/context';
 
 const Octokat = require('octokat');
