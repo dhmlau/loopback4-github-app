@@ -40,7 +40,6 @@ export class GitHubApplication extends BootMixin(RepositoryMixin(RestApplication
   }
 
   bindDataSource() {
-    // this.repository(GHStarRepository);
-    this.bind('datasources.db').to(db);
+    this.dataSource(db);
   }
 }

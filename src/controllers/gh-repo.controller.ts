@@ -27,7 +27,7 @@ async getRepoStargazers(
   @param.path.string('org') org: string,
   @param.path.string('repo') repo: string
 ): Promise<string> {
-  console.log('org/repo: ', org, repo);
+  console.debug('org/repo: ', org, repo);
   const repoContent = await octo.repos(org, repo).fetch();
   return repoContent.stargazersCount;
 }
@@ -41,9 +41,11 @@ async getRepoStargazers(
     @param.path.string('org') org: string,
     @param.path.string('repo') repo: string
   ): Promise<GHStars> {
-    console.log('org/repo', org, repo);
+    console.debug('org/repo', org, repo);
+    //gets the number of stargazers for a given GitHub repo
     const repoContent = await octo.repos(org, repo).fetch();
     const stargazerNum = repoContent.stargazersCount;
+    //stores the information to database
     const ghStar = new GHStars();
     ghStar.org = org;
     ghStar.repo = repo;
