@@ -18,7 +18,7 @@ export class GHRepoController {
     @param.path.string('org') org: string,
     @param.path.string('repo') repo: string
   ): Promise<number> {
-    console.log('org/repo: ', org, repo);
+    console.debug('org/repo: ', org, repo);
     const repoContent = await octo.repos(org, repo).fetch();
     return repoContent.stargazersCount;
   }
