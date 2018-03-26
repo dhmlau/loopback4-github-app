@@ -3,12 +3,10 @@ import {get, param} from "@loopback/openapi-v3";
 // import {inject} from @loopback/context;
 import {creds} from '../../creds';
 
+const debug = require('debug')('gh-repo');
 const Octokat = require('octokat');
 
-const octo = new Octokat({
-  username: creds.username,
-  password: creds.password
-});
+const octo = new Octokat(creds);
 
 export class GHRepoController {
   constructor() {}
@@ -18,7 +16,9 @@ export class GHRepoController {
     @param.path.string('org') org: string,
     @param.path.string('repo') repo: string
   ): Promise<number> {
-    console.debug('org/repo: ', org, repo);
+    
+    debug('org/repo: ', org, repo);
+    
     const repoContent = await octo.repos(org, repo).fetch();
     return repoContent.stargazersCount;
   }
