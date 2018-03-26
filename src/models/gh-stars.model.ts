@@ -13,7 +13,7 @@ export class GHStars extends Entity {
     @property({
         id: true,
     })
-    id?: number;
+    id: number;
 
     @property({
         required: true,
