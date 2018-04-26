@@ -10,6 +10,11 @@ The goal of this project is to show how to use LoopBack 4 to:
 
 The LoopBack 4 application created in this repo is to get the number of stargazers for a given GitHub repo and store it in a database.  
 
+**Note: Please refer to the following blog post series for detailed instruction:**
+https://strongloop.com/strongblog/loopback4-github-example-app-part1/
+https://strongloop.com/strongblog/loopback4-github-example-app-part2/
+https://strongloop.com/strongblog/loopback4-github-example-app-part3/
+
 ## Steps 
 ### 1. Scaffolding an LB4 application
 We are using the command-line interface to scaffold an LB4 application.  For other commands, refer to the [command-line interfaces documentation](http://loopback.io/doc/en/lb4/Command-line-interface.html).
